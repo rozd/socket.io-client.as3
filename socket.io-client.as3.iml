@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="Flex" version="4">
-  <component name="FlexBuildConfigurationManager" active="skein-sockets">
+  <component name="FlexBuildConfigurationManager" active="socket.io-client.as3">
     <configurations>
-      <configuration name="skein-sockets" pure-as="true" output-type="Library" output-file="skein-sockets.swc" output-folder="$MODULE_DIR$/../skein/skein-sockets/bin">
+      <configuration name="socket.io-client.as3" pure-as="true" output-type="Library" output-file="socket.io-client.as3.swc" output-folder="$MODULE_DIR$/../skein/skein-sockets/bin">
         <dependencies target-player="11.9">
           <entries>
-            <entry library-id="5bd92363-8bf0-4cd0-9310-73af49f4ec22">
+            <entry library-id="21fe6781-f900-41e8-ab6b-717146a83afe">
               <dependency linkage="Merged" />
             </entry>
           </entries>
@@ -28,13 +28,13 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" exported="">
       <library type="flex">
-        <properties id="5bd92363-8bf0-4cd0-9310-73af49f4ec22" />
+        <properties id="21fe6781-f900-41e8-ab6b-717146a83afe" />
         <CLASSES>
           <root url="file://$MODULE_DIR$/libs" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
-        <jarDirectory url="file://$MODULE_DIR$/../skein/skein-sockets/libs" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/libs" recursive="false" />
       </library>
     </orderEntry>
   </component>
