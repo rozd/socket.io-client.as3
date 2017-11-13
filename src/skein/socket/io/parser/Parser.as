@@ -48,7 +48,7 @@ public class Parser
         }
 
         // immediately followed by the id
-        if (null != obj.id) {
+        if (obj.id != -1) {
             if (nsp) {
                 str += ',';
                 nsp = false;

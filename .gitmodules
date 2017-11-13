@@ -1,0 +1,3 @@
+[submodule "Vendor/rozd/web-socket-js"]
+	path = Vendor/rozd/web-socket-js
+	url = https://github.com/rozd/web-socket-js

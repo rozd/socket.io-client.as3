@@ -3,13 +3,19 @@
   <component name="FlexBuildConfigurationManager" active="socket.io-client.as3">
     <configurations>
       <configuration name="socket.io-client.as3" pure-as="true" output-type="Library" output-file="socket.io-client.as3.swc" output-folder="$MODULE_DIR$/../skein/skein-sockets/bin">
-        <dependencies target-player="11.9">
+        <dependencies target-player="27.0">
           <entries>
             <entry library-id="21fe6781-f900-41e8-ab6b-717146a83afe">
               <dependency linkage="Merged" />
             </entry>
+            <entry module-name="skein-core" build-configuration-name="skein-core">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry module-name="skein-utils" build-configuration-name="skein-utils">
+              <dependency linkage="Merged" />
+            </entry>
           </entries>
-          <sdk name="3.9.1" />
+          <sdk name="27.0.0" />
         </dependencies>
         <compiler-options />
         <packaging-air-desktop />
@@ -23,8 +29,10 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Vendor/rozd/web-socket-js/flash-src/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Vendor/rozd/web-socket-js/flash-src/third-party" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="3.9.1" jdkType="Flex SDK Type (new)" />
+    <orderEntry type="jdk" jdkName="27.0.0" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" exported="">
       <library type="flex">
@@ -37,6 +45,7 @@
         <jarDirectory url="file://$MODULE_DIR$/libs" recursive="false" />
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="skein-utils" exported="" />
+    <orderEntry type="module" module-name="skein-core" exported="" />
   </component>
 </module>
-

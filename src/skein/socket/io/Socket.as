@@ -108,7 +108,7 @@ public class Socket extends Emitter
             {
                 args.unshift(event);
 
-                packet = new Packet(Parser.EVENT, toJsonArray(args));
+                packet = new Packet(Parser.EVENT, args);
                 this.packet(packet);
             }
         }

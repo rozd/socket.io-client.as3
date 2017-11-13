@@ -49,7 +49,7 @@ public class Parser
             encoded += packet.data;
         }
 
-        return encoded;
+        return encodeURIComponent(encoded);
     }
 
     public static function decodePacket(data:String):Packet

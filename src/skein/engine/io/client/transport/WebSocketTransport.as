@@ -1,29 +1,22 @@
 /**
- * Created with IntelliJ IDEA.
- * User: mobitile
- * Date: 2/27/14
- * Time: 11:06 PM
- * To change this template use File | Settings | File Templates.
+ * Created by max.rozdobudko@gmail.com on 11/12/17.
  */
-package skein.engine.io.client.transport
-{
+package skein.engine.io.client.transport {
 import flash.events.Event;
 import flash.system.Security;
 
 import skein.engine.io.client.Transport;
 import skein.engine.io.client.TransportOptions;
+import skein.engine.io.client.transport.websocket.WebSocketClient;
+import skein.engine.io.client.transport.websocket.WebSocketClientDelegate;
 import skein.engine.io.parser.Packet;
 import skein.engine.io.parser.Parser;
 
-public class WebSocketTransport extends Transport
-{
+public class WebSocketTransport extends Transport implements WebSocketClientDelegate {
+
     public static const NAME:String = "websocket";
 
-    //--------------------------------------------------------------------------
-    //
-    //  Constructor
-    //
-    //--------------------------------------------------------------------------
+    // Constructor
 
     public function WebSocketTransport(opts:TransportOptions)
     {
@@ -36,7 +29,7 @@ public class WebSocketTransport extends Transport
     //
     //--------------------------------------------------------------------------
 
-    private var socket:WebSocket;
+    private var socket:WebSocketClient;
 
     //--------------------------------------------------------------------------
     //
@@ -90,11 +83,8 @@ public class WebSocketTransport extends Transport
         if (!this.check())
             return;
 
-        var origin:String = (secure ? "https" : "http") + "://" + hostname;
-
-        loadDefaultPolicyFile();
-        socket = new WebSocket(new WebSocketWrapper(origin), uri, null);
-        socket.addEventListener("event", socketHandler);
+        socket = new WebSocketClient(uri, []);
+        socket.delegate = this;
     }
 
     override protected function write(packets:Array):void
@@ -127,102 +117,45 @@ public class WebSocketTransport extends Transport
     //
     //--------------------------------------------------------------------------
 
-    protected function loadDefaultPolicyFile():void
-    {
-        var policyUrl:String = "xmlsocket://" + this.hostname + ":843";
-
-        Security.loadPolicyFile(policyUrl);
-    }
-
     private function check():Boolean
     {
         return true;
     }
 
-    //--------------------------------------------------------------------------
-    //
-    //  Handlers
-    //
-    //--------------------------------------------------------------------------
+    // <WebSocketClientDelegate>
 
-    private function socketHandler(e:Event):void
-    {
-        var events:Array = socket.receiveEvents();
+    public function webSocketClientID(): int {
+        return 0;
+    }
 
-        var event:Object = events[0];
+    public function webSocketClientHostname(): String {
+        return hostname;
+    }
 
-        switch (event.type)
-        {
-            case "open" :
+    public function webSocketClientOrigin(): String {
+        return (secure ? "https" : "http") + "://" + hostname;
+    }
 
-                var headers:Array = [];
+    public function webSocketClientCookie(): String {
+        return "";
+    }
 
-                emit(EVENT_RESPONSE_HEADERS, headers);
+    public function webSocketClientDidOpen(): void {
+        var headers:Array = [];
+        emit(EVENT_RESPONSE_HEADERS, headers);
+        onOpen();
+    }
 
-                onOpen();
+    public function webSocketClientDidClose(): void {
+        onClose();
+    }
 
-                break;
+    public function webSocketClientDidError(): void {
+        onError("websocket error", new Error());
+    }
 
-            case "close" :
-
-                socket.removeEventListener("event", socketHandler);
-
-                onClose();
-
-                break;
-
-            case "message" :
-
-                onData(event.data);
-
-                break;
-
-            case "error" :
-
-                onError("websocket error", new Error());
-
-                break;
-        }
+    public function webSocketClientDidMessage(message: String): void {
+        onData(message);
     }
 }
-}
-
-class WebSocketWrapper implements IWebSocketWrapper
-{
-    public function WebSocketWrapper(origin:String, debug:Boolean=true)
-    {
-        super();
-
-        this.origin = origin;
-        this.debug = debug;
-    }
-
-    private var origin:String;
-    private var debug:Boolean;
-
-    public function getOrigin():String
-    {
-        return origin;
-    }
-
-    public function getCallerHost():String
-    {
-        return null;
-    }
-
-    public function log(message:String):void
-    {
-        if (debug)
-            trace("WebSocket LOG:", message);
-    }
-
-    public function fatal(message:String):void
-    {
-        trace("WebSocket FATAL:", message);
-    }
-
-    public function error(message:String):void
-    {
-        trace("WebSocket ERROR", message);
-    }
 }
