@@ -17,6 +17,7 @@ import skein.emitter.Emitter;
 
 import skein.engine.io.parser.Packet;
 import skein.engine.io.parser.Parser;
+import skein.logger.Log;
 
 public class Transport extends Emitter
 {
@@ -145,7 +146,7 @@ public class Transport extends Emitter
 
     protected function onData(data:String):void
     {
-        trace(data);
+        Log.d("engine.io", data);
 
         this.onPacket(Parser.decodePacket(decodeURIComponent(data)));
     }

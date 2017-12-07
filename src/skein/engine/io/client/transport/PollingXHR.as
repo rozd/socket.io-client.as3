@@ -12,6 +12,7 @@ import flash.net.URLRequest;
 import skein.engine.io.client.TransportOptions;
 import skein.engine.io.client.transport.xhr.Request;
 import skein.engine.io.client.transport.xhr.RequestOptions;
+import skein.logger.Log;
 
 public class PollingXHR extends Polling
 {
@@ -56,7 +57,7 @@ public class PollingXHR extends Polling
             });
 
         sendXhr.on(Request.EVENT_ERROR,
-            function(error:Error):void
+            function(error:Error=null):void
             {
                 onError("xhr post error", error);
             })
@@ -66,7 +67,7 @@ public class PollingXHR extends Polling
 
     override protected function doPoll():void
     {
-        trace("xhr poll");
+        Log.d("engine.io", "xhr poll");
 
         pollXhr = request();
 
@@ -77,7 +78,7 @@ public class PollingXHR extends Polling
             });
 
         pollXhr.on(Request.EVENT_ERROR,
-            function(error:Error):void
+            function(error:Error=null):void
             {
                 onError("xhr poll error", error);
             })

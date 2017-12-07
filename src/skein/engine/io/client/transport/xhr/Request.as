@@ -18,6 +18,7 @@ import flash.net.URLRequest;
 import flash.net.URLRequestHeader;
 
 import skein.emitter.Emitter;
+import skein.logger.Log;
 
 import skein.utils.StringUtil;
 
@@ -41,7 +42,7 @@ public class Request extends Emitter
 
     public function create():void
     {
-        trace(StringUtil.substitute("xhr open {0}: {1}", this.method, this.uri));
+        Log.d("engine.io", StringUtil.substitute("xhr open {0}: {1}", this.method, this.uri));
 
         xhr = new URLLoader();
 

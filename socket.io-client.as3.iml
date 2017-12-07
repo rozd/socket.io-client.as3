@@ -9,10 +9,13 @@
               <dependency linkage="Merged" />
             </entry>
             <entry module-name="skein-core" build-configuration-name="skein-core">
-              <dependency linkage="Merged" />
+              <dependency linkage="External" />
             </entry>
             <entry module-name="skein-utils" build-configuration-name="skein-utils">
-              <dependency linkage="Merged" />
+              <dependency linkage="External" />
+            </entry>
+            <entry module-name="skein-logger" build-configuration-name="skein-logger">
+              <dependency linkage="External" />
             </entry>
           </entries>
           <sdk name="27.0.0" />
@@ -47,5 +50,6 @@
     </orderEntry>
     <orderEntry type="module" module-name="skein-utils" exported="" />
     <orderEntry type="module" module-name="skein-core" exported="" />
+    <orderEntry type="module" module-name="skein-logger" exported="" />
   </component>
 </module>

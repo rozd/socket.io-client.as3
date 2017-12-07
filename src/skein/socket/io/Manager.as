@@ -17,6 +17,7 @@ import flash.utils.Timer;
 
 import skein.emitter.Emitter;
 import skein.engine.io.client.Engine;
+import skein.logger.Log;
 import skein.socket.io.parser.Packet;
 import skein.socket.io.parser.Parser;
 import skein.utils.StringUtil;
@@ -188,13 +189,13 @@ public class Manager extends Emitter
 
         if (_timeout >= 0)
         {
-            trace(StringUtil.substitute("connection attempt will timeout after {0}", _timeout));
+            Log.d("socket.io", StringUtil.substitute("connection attempt will timeout after {0}", _timeout));
 
             var timeoutHandler:Function = function(event:Event):void
             {
                 timer.removeEventListener(TimerEvent.TIMER_COMPLETE, timeoutHandler);
 
-                trace(StringUtil.substitute("connect attempt timed out after {0}", _timeout));
+                Log.d("socket.io", StringUtil.substitute("connect attempt timed out after {0}", _timeout));
 
                 openSub.destroy();
                 engine.close();
@@ -256,7 +257,7 @@ public class Manager extends Emitter
 
     internal function packet(packet:Packet):void
     {
-        trace(StringUtil.substitute("writing packet {0}", packet));
+//        Log.d("socket.io", StringUtil.substitute("writing packet {0}", packet));
 
         this.engine.write(Parser.encode(packet));
     }
@@ -293,7 +294,7 @@ public class Manager extends Emitter
             var delay:Number = attempts * _reconnectionDelay;
             delay = Math.min(delay, _reconnectionDelayMax);
 
-            trace(StringUtil.substitute("will wait {0} before reconnect attempt", delay));
+            Log.d("socket.io", StringUtil.substitute("will wait {0} before reconnect attempt", delay));
 
             reconnecting = true;
 
@@ -305,13 +306,13 @@ public class Manager extends Emitter
                      {
                          if (error != null)
                          {
-                             trace("reconnect attempt error");
+                             Log.d("socket.io", "reconnect attempt error");
                              reconnect();
                              emit(EVENT_RECONNECT_ERROR, error);
                          }
                          else
                          {
-                             trace("reconnect success");
+                             Log.d("socket.io", "reconnect success");
                              onreconnect();
                          }
                      });
@@ -384,7 +385,7 @@ public class Manager extends Emitter
             }));
 
         this.subs.push(On.on(engine, Engine.EVENT_ERROR,
-            function(data:Error):void
+            function(data:Error=null):void
             {
                 onerror(data);
             }));

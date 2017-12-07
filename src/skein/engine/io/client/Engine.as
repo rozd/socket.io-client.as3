@@ -20,6 +20,7 @@ import skein.engine.io.client.transport.WebSocketTransport;
 import skein.engine.io.parser.HandshakeData;
 import skein.engine.io.parser.Packet;
 import skein.engine.io.parser.Parser;
+import skein.logger.Log;
 import skein.utils.StringUtil;
 
 public class Engine extends Emitter
@@ -171,7 +172,7 @@ public class Engine extends Emitter
         if (readyState == OPENING || readyState == OPEN)
         {
             onClose("forced close");
-            trace("socket closing - telling transport to close");
+            Log.d("engine.io", "socket closing - telling transport to close");
             transport.close();
         }
 
@@ -194,7 +195,7 @@ public class Engine extends Emitter
 
     private function createTransport(name:String):Transport
     {
-        trace(StringUtil.substitute("creating transport '{0}'", name));
+        Log.d("engine.io", StringUtil.substitute("creating transport '{0}'", name));
 
         var query:Object = {};
 
@@ -229,11 +230,11 @@ public class Engine extends Emitter
 
     private function setTransport(transport:Transport):void
     {
-        trace(StringUtil.substitute("setting transport {0}", transport.name));
+        Log.d("engine.io", StringUtil.substitute("setting transport {0}", transport.name));
 
         if (this.transport)
         {
-            trace(StringUtil.substitute("clearing existing transport {0}", this.transport.name));
+            Log.d("engine.io", StringUtil.substitute("clearing existing transport {0}", this.transport.name));
 
             this.transport.off();
         }
@@ -273,7 +274,7 @@ public class Engine extends Emitter
 
     private function probe(name:String):void
     {
-        trace(StringUtil.substitute("probing transport {0}", name));
+        Log.d("engine.io", StringUtil.substitute("probing transport {0}", name));
 
         var transport:Transport = createTransport(name);
         var failed:Boolean = false;
@@ -296,7 +297,7 @@ public class Engine extends Emitter
             {
                 if (failed) return;
 
-                trace(StringUtil.substitute("probe transport '{0}' opened", name));
+                Log.d("engine.io", StringUtil.substitute("probe transport '{0}' opened", name));
 
                 var packet:Packet = new Packet(Packet.PING, "probe");
 
@@ -311,13 +312,13 @@ public class Engine extends Emitter
 
                         if (msg.type == Packet.PONG && msg.data == "probe")
                         {
-                            trace(StringUtil.substitute("probe transport '%s' pong", name));
+                            Log.d("engine.io", StringUtil.substitute("probe transport '%s' pong", name));
 
                             upgrading = true;
 
                             emit(EVENT_UPGRADING, transport);
 
-                            trace(StringUtil.substitute("pausing current transport {0}", self.transport.name));
+                            Log.d("engine.io", StringUtil.substitute("pausing current transport {0}", self.transport.name));
 
                             Polling(self.transport).pause(
                                 function():void
@@ -327,7 +328,7 @@ public class Engine extends Emitter
                                     if (readyState == CLOSED || readyState == CLOSING)
                                         return;
 
-                                    trace("changing transport and sending upgrade packet");
+                                    Log.d("engine.io", "changing transport and sending upgrade packet");
 
                                     transport.off(Transport.EVENT_ERROR, onerror);
                                     emit(EVENT_UPGRADE, transport);
@@ -341,7 +342,7 @@ public class Engine extends Emitter
                         }
                         else
                         {
-                            trace(StringUtil.substitute("probe transport '{0}' failed", name));
+                            Log.d("engine.io", StringUtil.substitute("probe transport '{0}' failed", name));
 
                             emit(EVENT_UPGRADE_ERROR, new Error("probe error"));
                         }
@@ -355,7 +356,7 @@ public class Engine extends Emitter
             {
                 if (transport)
                 {
-                    trace("socket closed prematurely - aborting probe");
+                    Log.d("engine.io", "socket closed prematurely - aborting probe");
                     failed = true;
                     transport.close();
                     transport = null;
@@ -368,7 +369,7 @@ public class Engine extends Emitter
             {
                 if (to != null && to.name != transport.name)
                 {
-                    trace(StringUtil.substitute("'{0}' works - aborting '{1}'", to.name, transport[0].name));
+                    Log.d("engine.io", StringUtil.substitute("'{0}' works - aborting '{1}'", to.name, transport[0].name));
                     transport.close();
                     transport = null;
                 }
@@ -405,7 +406,7 @@ public class Engine extends Emitter
     {
         if (readyState != CLOSED && this.transport.writable && !this.upgrading && writeBuffer.length > 0)
         {
-            trace(StringUtil.substitute("flushing {0} packets in socket", this.writeBuffer.length));
+//            Log.d("engine.io", StringUtil.substitute("flushing {0} packets in socket", this.writeBuffer.length));
 
             prevBufferLen = writeBuffer.length;
             transport.send(writeBuffer);
@@ -479,7 +480,7 @@ public class Engine extends Emitter
 
     private function onOpen():void
     {
-        trace("socket open");
+        Log.d("engine.io", "socket open");
 
         this.readyState = OPEN;
 
@@ -489,7 +490,7 @@ public class Engine extends Emitter
 
         if (this.readyState == OPEN && this.upgrade && this.transport is Polling)
         {
-            trace("starting upgrade probes");
+            Log.d("engine.io", "starting upgrade probes");
 
             for (var i:int = 0, n:int = this.upgrades.length; i < n; i++)
             {
@@ -503,7 +504,7 @@ public class Engine extends Emitter
     {
         if (this.readyState == OPENING || this.readyState == OPEN)
         {
-            trace(StringUtil.substitute("socket received: type '{0}', data '{1}'", packet.type, packet.data));
+//            Log.d("engine.io", StringUtil.substitute("socket received: type '{0}', data '{1}'", packet.type, packet.data));
 
             this.emit(EVENT_PACKET, packet);
             this.emit(EVENT_HEARTBEAT);
@@ -531,7 +532,7 @@ public class Engine extends Emitter
         }
         else
         {
-            trace(StringUtil.substitute("packet received with socket readyState '{0}'", this.readyState));
+            Log.d("engine.io", StringUtil.substitute("packet received with socket readyState '{0}'", this.readyState));
         }
     }
 
@@ -597,7 +598,7 @@ public class Engine extends Emitter
 
     private function onError(error:Error):void
     {
-        trace("socket error "+error);
+        Log.d("engine.io", "socket error "+error);
         emit(EVENT_ERROR);
         onerror(error);
         onClose("transport error", error);
@@ -659,7 +660,7 @@ public class Engine extends Emitter
 
     private function pingIntervalTimer_timerHandler(event:TimerEvent):void
     {
-        trace(StringUtil.substitute("writing ping packet - expecting pong within {0}", pingTimeout));
+//        Log.d("engine.io", StringUtil.substitute("writing ping packet - expecting pong within {0}", pingTimeout));
 
         ping();
         onHeartbeat(pingTimeout);

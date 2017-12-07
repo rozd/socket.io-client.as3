@@ -14,6 +14,7 @@ import skein.engine.io.client.TransportOptions;
 import skein.engine.io.client.Util;
 import skein.engine.io.parser.Packet;
 import skein.engine.io.parser.Parser;
+import skein.logger.Log;
 import skein.utils.StringUtil;
 
 public class Polling extends Transport
@@ -52,7 +53,7 @@ public class Polling extends Transport
 
         if (_readyState == OPEN)
         {
-            trace("transport open - closing");
+            Log.d("engine.io", "transport open - closing");
 
             close();
         }
@@ -60,14 +61,14 @@ public class Polling extends Transport
         {
             // in case we're trying to close while
             // handshaking is in progress (engine.io-client GH-164)
-            trace("transport not open - deferring close");
+            Log.d("engine.io", "transport not open - deferring close");
             once(EVENT_OPEN, close);
         }
     }
 
     override protected function onData(data:String):void
     {
-        trace(StringUtil.substitute("polling got data {0}", data));
+        Log.d("engine.io", StringUtil.substitute("polling got data {0}", data));
 
         Parser.decodePayload(data,
             function(packet:Packet, index:int, total:int):Boolean
@@ -98,7 +99,7 @@ public class Polling extends Transport
             }
             else
             {
-                trace(StringUtil.substitute("ignoring poll - transport state {0}", this.readyState));
+                Log.d("engine.io", StringUtil.substitute("ignoring poll - transport state {0}", this.readyState));
             }
         }
     }
@@ -138,14 +139,14 @@ public class Polling extends Transport
 
             if (this.polling)
             {
-                trace("we are currently polling - waiting to pause");
+                Log.d("engine.io", "we are currently polling - waiting to pause");
 
                 total++;
 
                 this.once(EVENT_POLL_COMPLETE,
                     function (...args):void
                     {
-                        trace("pre-pause polling complete");
+                        Log.d("engine.io", "pre-pause polling complete");
 
                         if (--total == 0)
                         {
@@ -156,14 +157,14 @@ public class Polling extends Transport
 
             if (!this.writable)
             {
-                trace("we are currently writing - waiting to pause");
+                Log.d("engine.io", "we are currently writing - waiting to pause");
 
                 total++;
 
                 this.once(EVENT_DRAIN,
                     function (...args):void
                     {
-                        trace("pre-pause writing complete");
+                        Log.d("engine.io", "pre-pause writing complete");
 
                         if (--total == 0)
                         {
@@ -180,7 +181,7 @@ public class Polling extends Transport
 
     private function poll():void
     {
-        trace("polling");
+        Log.d("engine.io", "polling");
 
         this.polling = true;
         this.doPoll();

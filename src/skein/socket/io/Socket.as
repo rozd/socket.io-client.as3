@@ -8,6 +8,7 @@
 package skein.socket.io
 {
 import skein.emitter.Emitter;
+import skein.logger.Log;
 import skein.socket.io.parser.Packet;
 import skein.socket.io.parser.Parser;
 import skein.utils.StringUtil;
@@ -97,7 +98,7 @@ public class Socket extends Emitter
 
                 args.unshift(event);
 
-                trace(StringUtil.substitute("emitting packet with ack id {0}", ids));
+                Log.d("socket.io", StringUtil.substitute("emitting packet with ack id {0}", ids));
 
                 packet = new Packet(Parser.EVENT, args);
                 acks[ids] = ack;
@@ -163,7 +164,7 @@ public class Socket extends Emitter
     {
         if (connected) return;
 
-        trace(StringUtil.substitute("performing disconnect ({0})", this.nsp));
+        Log.d("socket.io", StringUtil.substitute("performing disconnect ({0})", this.nsp));
 
         packet(new Packet(Parser.DISCONNECT));
 
@@ -240,7 +241,7 @@ public class Socket extends Emitter
 
     private function onopen():void
     {
-        trace("transport is open - connecting");
+        Log.d("socket.io", "transport is open - connecting");
 
         if (this.nsp != "/")
         {
@@ -293,11 +294,11 @@ public class Socket extends Emitter
     {
         var args:Array = packet.data as Array;
 
-        trace(StringUtil.substitute("emitting event {0}", args));
+//        Log.d("socket.io", StringUtil.substitute("emitting event {0}", args));
 
         if (packet.id >= 0)
         {
-            trace("attaching ack callback to event");
+            Log.d("socket.io", "attaching ack callback to event");
 
             args.push(this.ack(packet.id));
         }
@@ -328,7 +329,7 @@ public class Socket extends Emitter
 
                 sent = true;
 
-                trace(StringUtil.substitute("sending ack {0}", args));
+                Log.d("socket.io", StringUtil.substitute("sending ack {0}", args));
 
                 var packet:Packet = new Packet(Parser.ACK, args);
                 packet.id = id;
@@ -342,7 +343,7 @@ public class Socket extends Emitter
 //
 //            sent = true;
 //
-//            trace(StringUtil.substitute("sending ack {0}", args));
+//            Log.d("socket.io", StringUtil.substitute("sending ack {0}", args));
 //
 //            var packet:Packet = new Packet(Parser.ACK, args);
 //            packet.id = id;
@@ -355,7 +356,7 @@ public class Socket extends Emitter
 
     private function onack(packet:Packet):void
     {
-        trace(StringUtil.substitute("calling ack {0} with {1}", packet.id, packet.data));
+        Log.d("socket.io", StringUtil.substitute("calling ack {0} with {1}", packet.id, packet.data));
 
         var fn:Function = acks[packet.id];
 
@@ -387,14 +388,14 @@ public class Socket extends Emitter
 
     private function ondisconnect():void
     {
-        trace(StringUtil.substitute("server disconnect ({0})", this.nsp));
+        Log.d("socket.io", StringUtil.substitute("server disconnect ({0})", this.nsp));
         destroy();
         onclose("io server disconnect");
     }
 
     private function destroy():void
     {
-        trace(StringUtil.substitute("destroying socket ({0})", this.nsp));
+        Log.d("socket.io", StringUtil.substitute("destroying socket ({0})", this.nsp));
 
         for each (var handle:OnHandle in subs)
         {

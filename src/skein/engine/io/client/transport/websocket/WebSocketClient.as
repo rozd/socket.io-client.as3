@@ -9,6 +9,7 @@ import net.gimite.websocket.WebSocket;
 import net.gimite.websocket.WebSocketEvent;
 
 import skein.core.WeakReference;
+import skein.logger.Log;
 import skein.utils.delay.callLater;
 
 public class WebSocketClient implements IWebSocketLogger {
@@ -146,12 +147,12 @@ public class WebSocketClient implements IWebSocketLogger {
 
     public function log(message: String): void {
         if (debug) {
-            trace(message);
+            Log.d("engine.io", message);
         }
     }
 
     public function error(message: String): void {
-        trace(message);
+        Log.d("engine.io", message);
     }
 }
 }

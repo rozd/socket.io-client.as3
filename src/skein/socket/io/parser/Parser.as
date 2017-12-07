@@ -7,6 +7,7 @@
  */
 package skein.socket.io.parser
 {
+import skein.logger.Log;
 import skein.utils.StringUtil;
 
 public class Parser
@@ -62,7 +63,7 @@ public class Parser
             str += JSON.stringify(obj.data);
         }
 
-        trace('encoded %j as %s', obj, str);
+        Log.d("socket.io", ['encoded %j as %s', obj, str]);
         return str;
     }
 
@@ -117,7 +118,7 @@ public class Parser
             }
         }
 
-        trace(StringUtil.substitute('decoded {0} as {1}', str, p));
+        Log.d("socket.io", StringUtil.substitute('decoded {0} as {1}', str, p));
 
         return p;
     }
