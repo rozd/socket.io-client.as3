@@ -120,18 +120,21 @@ public class WebSocketClient implements IWebSocketLogger {
     // Handlers
 
     private function socketOpenHandler(event: WebSocketEvent): void {
+        log("Socket opened");
         if (delegate) {
             delegate.webSocketClientDidOpen();
         }
     }
 
     private function socketCloseHandler(event: WebSocketEvent): void {
+        log("Socket closed");
         if (delegate) {
             delegate.webSocketClientDidClose();
         }
     }
 
     private function socketErrorHandler(event: WebSocketEvent): void {
+        error("Socket error: " + event.message);
         if (delegate) {
             delegate.webSocketClientDidError();
         }

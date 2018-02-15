@@ -195,7 +195,7 @@ public class Manager extends Emitter
             {
                 timer.removeEventListener(TimerEvent.TIMER_COMPLETE, timeoutHandler);
 
-                Log.d("socket.io", StringUtil.substitute("connect attempt timed out after {0}", _timeout));
+                Log.e("socket.io", StringUtil.substitute("connect attempt timed out after {0}", _timeout));
 
                 openSub.destroy();
                 engine.close();

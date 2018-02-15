@@ -2,7 +2,7 @@
 <module type="Flex" version="4">
   <component name="FlexBuildConfigurationManager" active="socket.io-client.as3">
     <configurations>
-      <configuration name="socket.io-client.as3" pure-as="true" output-type="Library" output-file="socket.io-client.as3.swc" output-folder="$MODULE_DIR$/../skein/skein-sockets/bin">
+      <configuration name="socket.io-client.as3" pure-as="true" output-type="Library" output-file="socket.io-client.as3.swc" output-folder="$MODULE_DIR$/bin">
         <dependencies target-player="27.0">
           <entries>
             <entry library-id="21fe6781-f900-41e8-ab6b-717146a83afe">

@@ -18,9 +18,9 @@ public class WebSocketTransport extends Transport implements WebSocketClientDele
 
     // Constructor
 
-    public function WebSocketTransport(opts:TransportOptions)
-    {
+    public function WebSocketTransport(opts:TransportOptions) {
         super(opts);
+        this.name = NAME;
     }
 
     //--------------------------------------------------------------------------
