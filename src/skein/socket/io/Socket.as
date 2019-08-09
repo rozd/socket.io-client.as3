@@ -162,7 +162,7 @@ public class Socket extends Emitter
 
     public function close():void
     {
-        if (connected) return;
+        if (!connected) return;
 
         Log.d("socket.io", StringUtil.substitute("performing disconnect ({0})", this.nsp));
 
