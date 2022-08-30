@@ -507,7 +507,6 @@ public class Engine extends Emitter
 //            Log.d("engine.io", StringUtil.substitute("socket received: type '{0}', data '{1}'", packet.type, packet.data));
 
             this.emit(EVENT_PACKET, packet);
-            this.emit(EVENT_HEARTBEAT);
 
             switch (packet.type)
             {
@@ -517,25 +516,25 @@ public class Engine extends Emitter
 
                 // in protocol v3, the client sends a ping, and the server answers with a pong
                 case Packet.PING :
-					if(Parser.protocol==3){
-						trace('Bad direction')
-						return;
-					}
-                    sendPacket(Packet.PONG);
-					this.emit(EVENT_HEARTBEAT);
-                    break; 
+			if(Parser.protocol==3){
+				trace('Bad direction')
+				return;
+			}
+                    	sendPacket(Packet.PONG);
+			this.emit(EVENT_HEARTBEAT);
+                break; 
             
             
             
                 // in protocol v4, the server sends a ping, and the client answers with a pong
                 case Packet.PONG :
-					if(Parser.protocol!=3){
-						trace('Bad direction')
-						return;
-					}
+			if(Parser.protocol!=3){
+				trace('Bad direction')
+				return;
+			}
                     setPing();
-					this.emit(EVENT_HEARTBEAT);
-                    break;
+		    this.emit(EVENT_HEARTBEAT);
+		    break;
 
                 case Packet.ERROR :
                     emit(EVENT_ERROR, new Error("serve error"));
