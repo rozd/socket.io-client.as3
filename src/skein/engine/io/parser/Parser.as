@@ -9,7 +9,7 @@ package skein.engine.io.parser
 {
 public class Parser
 {
-    public static const protocol:int = 2;
+    public static const protocol:int = 4;  //in Socket.io version 4 the protocol is 4
 
     private static const packets:Object = {};
     {
