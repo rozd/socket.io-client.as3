@@ -242,8 +242,9 @@ public class Socket extends Emitter
     private function onopen():void
     {
         Log.d("socket.io", "transport is open - connecting");
-
-        if (this.nsp != "/")
+        
+        // No more implicit connection to the default namespace since v3
+        if (this.nsp != "/" || Parser.protocol >= 3)
         {
             this.packet(new Packet(Parser.CONNECT));
         }
