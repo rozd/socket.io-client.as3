@@ -24,6 +24,16 @@ public class WebSocketClient implements IWebSocketLogger {
         });
     }
 
+    // DataSource
+
+    private var _dataSource: WeakReference;
+    public function get dataSource(): WebSocketClientDataSource {
+        return _dataSource ? _dataSource.value : null;
+    }
+    public function set dataSource(value: WebSocketClientDataSource): void {
+        _dataSource = new WeakReference(value);
+    }
+
     // Delegate
 
     private var _delegate: WeakReference;
@@ -79,18 +89,18 @@ public class WebSocketClient implements IWebSocketLogger {
     // Connection Options
 
     protected function getId(): int {
-        return delegate.webSocketClientID();
+        return !!dataSource ? dataSource.webSocketClientID() : 0;
     }
     protected function getHostname(): String {
-        return delegate.webSocketClientHostname();
+        return !!dataSource ? dataSource.webSocketClientHostname() : null;
     }
 
     protected function getOrigin(): String {
-        return delegate.webSocketClientOrigin();
+        return !!dataSource ? dataSource.webSocketClientOrigin() : null;
     }
 
     protected function getCookie(url: String): String {
-        return delegate.webSocketClientCookie();
+        return !!dataSource ? dataSource.webSocketClientCookie() : null;
     }
 
     // Parse Data

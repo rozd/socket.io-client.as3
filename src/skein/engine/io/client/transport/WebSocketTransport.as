@@ -8,11 +8,12 @@ import flash.system.Security;
 import skein.engine.io.client.Transport;
 import skein.engine.io.client.TransportOptions;
 import skein.engine.io.client.transport.websocket.WebSocketClient;
+import skein.engine.io.client.transport.websocket.WebSocketClientDataSource;
 import skein.engine.io.client.transport.websocket.WebSocketClientDelegate;
 import skein.engine.io.parser.Packet;
 import skein.engine.io.parser.Parser;
 
-public class WebSocketTransport extends Transport implements WebSocketClientDelegate {
+public class WebSocketTransport extends Transport implements WebSocketClientDataSource, WebSocketClientDelegate {
 
     public static const NAME:String = "websocket";
 
@@ -84,6 +85,7 @@ public class WebSocketTransport extends Transport implements WebSocketClientDele
             return;
 
         socket = new WebSocketClient(uri, []);
+        socket.dataSource = this;
         socket.delegate = this;
     }
 
@@ -122,7 +124,7 @@ public class WebSocketTransport extends Transport implements WebSocketClientDele
         return true;
     }
 
-    // <WebSocketClientDelegate>
+    // <WebSocketClientDataSource>
 
     public function webSocketClientID(): int {
         return 0;
@@ -139,6 +141,8 @@ public class WebSocketTransport extends Transport implements WebSocketClientDele
     public function webSocketClientCookie(): String {
         return "";
     }
+
+    // <WebSocketClientDelegate>
 
     public function webSocketClientDidOpen(): void {
         var headers:Array = [];
